@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Vitsquad</title>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <style>
+  @import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
+  #map {
+    width: 350px;
+    height: 250px;
+
+  }
+
+</style>
+</head>
+<body>
+
+<img src="http://i64.tinypic.com/34gagja.png" alt="Image and video hosting by TinyPic" width="400" height = "100" class="center">
+
+<div>
+  <form>
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" placeholder="patient's name">
+    <label for="bp">Blood Pressure</label>
+    <input type="text" id="bp" name="bp" placeholder="blood pressure">
+    <label for="hr">Heart Rate</label>
+    <input type="text" id="hr" name="hr" placeholder="heart rate">
+    <label for="rr">Respiratory Rate</label>
+    <input type="text" id="rr" name="rr" placeholder="respiratory rate">
+    <label for="bp">Body Temperature</label>
+    <input type="text" id="bt" name="bt" placeholder="body temperature">
+  
+  
+    <input type="submit" value="Diagnose" onclick="location.href='#results', showDiagnosis()">
+  </form>
+</div>
+
+<!-- 	<h2 style= "font-family:Montserrat;text-align: center;"><b>InstaAnalysis</b></h2> 
+ -->
+<!-- 	<form>
+    	Blood Pressure: <input type="text" id="bp"><br>
+    	Heart Rate: <input type="text" id="hr"><br>
+    	Respiratory Rate: <input type="text" id="rr"><br>
+    	Body Temperature: <input type="text" id="bt"><br>
+    	<input type="submit" value="Submit" onclick="location.href='#results'">
+	</form> -->
+	<!-- <form>
+      <input id="item" type="text" placeholder="New">
+      <input type="submit" value="Submit" onclick="location.href='#results'">
+    </form>
+ -->
+
+<!--     <button>Clear All</button>
+ -->
+
+<div class="container" style="background-color:#f2f2f2;">
+  <h2 id="results" style="color:#FF8D75; font-family:Montserrat;"><b>Vital Data</b></h2>
+  <h3 id="patient">History of the patient's vitals:</h3>            
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Blood Pressure (mmHg)</th>
+        <th>Heart Rate (bpm)</th>
+        <th>Respiratory Rate (breaths per min)</th>
+        <th>Body Temperature (&#176F)</th>
+      </tr>
+    </thead>
+    <tbody>
+<!-- 	    <tr id="row1" style="display:none;">
+        <td id="bp1"></td>
+        <td id="hr1"></td>
+        <td id="rr1"></td>
+        <td id="bt1"></td>
+      </tr>
+      <tr id="row2" style="display:none;">
+        <td id="bp2"></td>
+        <td id="hr2"></td>
+        <td id="rr2"></td>
+        <td id="bt2"></td>
+      </tr>
+      <tr style="display:none;">
+       <td id="bp3"></td>
+        <td id="hr3"></td>
+        <td id="rr3"></td>
+        <td id="bt3"></td>
+      </tr>
+      <tr style="display:none;">
+        <td id="bp4"></td>
+        <td id="hr4"></td>
+        <td id="rr4"></td>
+        <td id="bt4"></td>
+      </tr> -->
+    </tbody>
+  </table>
+</div>
+  
+
+<div class="container" style="background-color:#f2f2f2;">
+  <div class="row">
+    <div class="col-sm-4">
+      <h3 style="color:#FF8D75;font-family:Montserrat;"><a href="#"><b>Update Vitals</b></a></h3>
+      <button type="button" class="btn btn-info">Clear Vitals</button>
+    </div>
+    <div class="col-sm-4">
+      <h3 style="color:#FF8D75; font-family:Montserrat;" ><b>Diagnosis</b></h3>
+      <p id="issue" style="font-size:20;font-weight: bold;">Issue:<br></p>
+      <p id="solution">Solution:<br></p>
+    </div>
+    <div class="col-sm-4" >
+      <h3  style="color:#FF8D75; font-family:Montserrat;" ><b>Help Near You</b></h3>
+      <div id="map" style="background-color: white;"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  var map;
+  var service;
+  var infowindow;
+  function initialize() {
+    var pyrmont = new google.maps.LatLng(40.7410979, -73.9888683); // sample location to start with: Mumbai, India
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: pyrmont,
+      zoom: 15
+    });
+    var request = {
+      location: pyrmont,
+      radius: 200,
+      types: ['hospital', 'health'] // this is where you set the map to get the hospitals and health related places
+    };
+    // infowindow = new google.maps.InfoWindow();
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+  }
+  function callback(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      for (var i = 0; i < results.length; i++) {
+        createMarker(results[i]);
+      }
+    }
+  }
+  </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUQST0WQudlVagISzM90ts7UjnUka0hkc&callback=initMap">
+    </script>
+
+    <script type="text/JavaScript" src="index.js"></script>
+</body>
+
+
+</html>
