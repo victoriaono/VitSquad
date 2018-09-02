@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Vitsquad</title>
+  <title>VitSquad</title>
   
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -43,24 +43,6 @@
   </form>
 </div>
 
-<!-- 	<h2 style= "font-family:Montserrat;text-align: center;"><b>InstaAnalysis</b></h2> 
- -->
-<!-- 	<form>
-    	Blood Pressure: <input type="text" id="bp"><br>
-    	Heart Rate: <input type="text" id="hr"><br>
-    	Respiratory Rate: <input type="text" id="rr"><br>
-    	Body Temperature: <input type="text" id="bt"><br>
-    	<input type="submit" value="Submit" onclick="location.href='#results'">
-	</form> -->
-	<!-- <form>
-      <input id="item" type="text" placeholder="New">
-      <input type="submit" value="Submit" onclick="location.href='#results'">
-    </form>
- -->
-
-<!--     <button>Clear All</button>
- -->
-
 <div class="container" style="background-color:#f2f2f2;">
   <h2 id="results" style="color:#FF8D75; font-family:Montserrat;"><b>Vital Data</b></h2>
   <h3 id="patient">History of the patient's vitals:</h3>            
@@ -74,30 +56,6 @@
       </tr>
     </thead>
     <tbody>
-<!-- 	    <tr id="row1" style="display:none;">
-        <td id="bp1"></td>
-        <td id="hr1"></td>
-        <td id="rr1"></td>
-        <td id="bt1"></td>
-      </tr>
-      <tr id="row2" style="display:none;">
-        <td id="bp2"></td>
-        <td id="hr2"></td>
-        <td id="rr2"></td>
-        <td id="bt2"></td>
-      </tr>
-      <tr style="display:none;">
-       <td id="bp3"></td>
-        <td id="hr3"></td>
-        <td id="rr3"></td>
-        <td id="bt3"></td>
-      </tr>
-      <tr style="display:none;">
-        <td id="bp4"></td>
-        <td id="hr4"></td>
-        <td id="rr4"></td>
-        <td id="bt4"></td>
-      </tr> -->
     </tbody>
   </table>
 </div>
@@ -106,8 +64,8 @@
 <div class="container" style="background-color:#f2f2f2;">
   <div class="row">
     <div class="col-sm-4">
-      <h3 style="color:#FF8D75;font-family:Montserrat;"><a href="#"><b>Update Vitals</b></a></h3>
-      <button type="button" class="btn btn-info">Clear Vitals</button>
+      <h3 style="color:#FF8D75;font-family:Montserrat;"><a href="#" onclick="clearDiagnosis()"><b>Update Vitals</b></a></h3>
+      <button type="button" class="btn btn-info" onclick="clearDiagnosis()">Clear Vitals</button>
     </div>
     <div class="col-sm-4">
       <h3 style="color:#FF8D75; font-family:Montserrat;" ><b>Diagnosis</b></h3>
@@ -117,42 +75,90 @@
     <div class="col-sm-4" >
       <h3  style="color:#FF8D75; font-family:Montserrat;" ><b>Help Near You</b></h3>
       <div id="map" style="background-color: white;"></div>
+      <div id="x"></div>
     </div>
   </div>
 </div>
 
 
 
-<script>
-  var map;
-  var service;
-  var infowindow;
-  function initialize() {
-    var pyrmont = new google.maps.LatLng(40.7410979, -73.9888683); // sample location to start with: Mumbai, India
-    map = new google.maps.Map(document.getElementById('map'), {
-      center: pyrmont,
-      zoom: 15
-    });
-    var request = {
-      location: pyrmont,
-      radius: 200,
-      types: ['hospital', 'health'] // this is where you set the map to get the hospitals and health related places
-    };
-    // infowindow = new google.maps.InfoWindow();
-    var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
-  }
-  function callback(results, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-      for (var i = 0; i < results.length; i++) {
-        createMarker(results[i]);
+    <script>
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+    var map;
+    var infowindow;
+
+    function initMap() {
+      var nyc = {lat: 40.7128, lng: -74.0060};
+
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: nyc,
+        zoom: 15,
+        disableDefaultUI: true
+      });
+
+      infowindow = new google.maps.InfoWindow();
+      var service = new google.maps.places.PlacesService(map);
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            
+            infowindow.setPosition(pos);
+            // infowindow.open(map);
+            map.setCenter(pos);
+
+            service.nearbySearch({
+            location: pos,
+            radius: 500,
+            type: ['hospital']
+          }, callback);
+
+          }, function() {
+            handleLocationError(true, infowindow, map.getCenter());
+          });
+          
+
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infowindow, map.getCenter());
+          service.nearbySearch({
+            location: nyc,
+            radius: 500,
+            type: ['hospital']
+          }, callback);
+        }
+    }
+
+    function callback(results, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          createMarker(results[i]);
+        }
       }
     }
-  }
-  </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUQST0WQudlVagISzM90ts7UjnUka0hkc&callback=initMap">
+
+    function createMarker(place) {
+      var placeLoc = place.geometry.location;
+      var marker = new google.maps.Marker({
+        map: map,
+        position: place.geometry.location
+      });
+
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(place.name);
+        infowindow.open(map, this);
+      });
+    }
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUQST0WQudlVagISzM90ts7UjnUka0hkc&libraries=places&callback=initMap" async defer></script>
 
     <script type="text/JavaScript" src="index.js"></script>
 </body>
