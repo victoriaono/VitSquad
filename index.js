@@ -1,7 +1,11 @@
 function clearDiagnosis() {
   document.getElementById("issue").innerHTML = "Issue:<br>"
   document.getElementById("solution").innerHTML = "Solution:<br>"
-  document.getElementById("name").value = ""
+}
+
+function clearName() {
+    document.getElementById("name").value = ""
+    document.getElementById("patient").innerHTML = "History of the patient\'s vitals:"
 }
 
 function showDiagnosis() {
