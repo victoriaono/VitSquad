@@ -1,6 +1,7 @@
 function clearDiagnosis() {
-  document.getElementById("issue").innerHTML = ""
-  document.getElementById("solution").innerHTML = ""
+  document.getElementById("issue").innerHTML = "Issue:<br>"
+  document.getElementById("solution").innerHTML = "Solution:<br>"
+  document.getElementById("name").value = ""
 }
 
 function showDiagnosis() {
